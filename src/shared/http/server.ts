@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import routes from "./routes/index.js";
 import AppError from "@shared/errors/AppError.js";
+import "express-async-errors";
 const app = express();
 
 const PORT = 3000;
