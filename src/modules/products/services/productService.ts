@@ -1,10 +1,10 @@
-import AppError from "@shared/errors/AppError.js";
+import createHttpError from "http-errors";
 import productRepository from "../repositories/productRepository.js";
 
 async function CreateProductService(data: IProductRequest) {
   const productExists = await productRepository.findBydName(data.name);
   if (productExists) {
-    throw new AppError("Product already exists", 400);
+    throw createHttpError(400, "Product already exists");
   }
   const product = await productRepository.create(data);
 
@@ -20,7 +20,7 @@ async function ListProductService() {
 async function ShowProductService(id: string) {
   const product = await productRepository.findById(id);
   if (!product) {
-    throw new AppError("Product not found", 404);
+    throw createHttpError(404, "Product not found");
   }
 
   return product;
@@ -29,12 +29,12 @@ async function ShowProductService(id: string) {
 async function UpdateProductService(id: string, data: IProductRequest) {
   const product = await productRepository.findById(id);
   if (!product) {
-    throw new AppError("Product not found", 404);
+    throw createHttpError(404, "Product not found");
   }
 
   const productExists = await productRepository.findBydName(data.name);
   if (productExists && data.name !== product.name) {
-    throw new AppError("Product already exists", 400);
+    throw createHttpError(400, "Product already exists");
   }
 
   product.name = data.name;

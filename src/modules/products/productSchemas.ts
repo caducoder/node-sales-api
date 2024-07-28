@@ -1,7 +1,15 @@
 import { z } from "zod";
 
 export const createProductSchema = z.object({
-  name: z.string(),
-  price: z.number(),
-  quantity: z.number(),
+  body: z.object({
+    name: z.string(),
+    price: z.number(),
+    quantity: z.number(),
+  }),
+});
+
+export const getProductSchema = z.object({
+  params: z.object({
+    id: z.string(),
+  }),
 });

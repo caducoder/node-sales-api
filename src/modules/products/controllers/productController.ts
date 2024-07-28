@@ -1,17 +1,25 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import productService from "../services/productService.js";
 
-async function ListProducts(req: Request, res: Response) {
-  const productList = await productService.ListProductService();
+async function ListProducts(req: Request, res: Response, next: NextFunction) {
+  try {
+    const productList = await productService.ListProductService();
 
-  return res.json(productList);
+    return res.json(productList);
+  } catch (ex: unknown) {
+    next(ex);
+  }
 }
 
-async function ShowProduct(req: Request, res: Response) {
-  const { id } = req.params;
-  const product = await productService.ShowProductService(id);
+async function ShowProduct(req: Request, res: Response, next: NextFunction) {
+  try {
+    const { id } = req.params;
+    const product = await productService.ShowProductService(id);
 
-  return res.json(product);
+    return res.json(product);
+  } catch (ex: unknown) {
+    next(ex);
+  }
 }
 
 async function CreateProduct(req: Request, res: Response) {
