@@ -8,12 +8,13 @@ datasource db {
 }
 
 model Product {
-  id         String   @id @default(uuid())
+  id         String             @id @default(uuid())
   name       String
   price      Int //cents
   quantity   Int
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  created_at DateTime           @default(now())
+  updated_at DateTime           @default(now())
+  orders     ProductsOnOrders[]
 
   @@map("products")
 }
@@ -36,6 +37,31 @@ model Customer {
   email      String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
+  order      Order[]
 
   @@map("customers")
+}
+
+model Order {
+  id          String             @id @default(uuid())
+  customer    Customer?          @relation(fields: [customer_id], references: [id], onDelete: SetNull)
+  customer_id Int?
+  created_at  DateTime           @default(now())
+  updated_at  DateTime           @default(now())
+  products    ProductsOnOrders[]
+
+  @@map("orders")
+}
+
+model ProductsOnOrders {
+  product    Product @relation(fields: [product_id], references: [id])
+  product_id String
+
+  order    Order  @relation(fields: [order_id], references: [id])
+  order_id String
+  quantity Int
+  price    Int
+
+  @@id([product_id, order_id])
+  @@map("orders_products")
 }

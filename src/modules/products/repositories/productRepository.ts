@@ -34,7 +34,17 @@ async function findById(id: string) {
   return product;
 }
 
-async function save(product: Product) {
+async function findAllById(productsIds: string[]) {
+  const products = await prisma.product.findMany({
+    where: {
+      id: { in: productsIds },
+    },
+  });
+
+  return products;
+}
+
+async function save(product: Partial<Product>) {
   await prisma.product.update({
     where: {
       id: product.id,
@@ -58,4 +68,5 @@ export default {
   findById,
   save,
   remove,
+  findAllById,
 };
