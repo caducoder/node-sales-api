@@ -11,10 +11,10 @@ async function resetPasswordService(password: string, token: string) {
     throw createHttpError(404, "User token does not exists.");
   }
 
-  const user = await userRepository.findById(userToken.id);
+  const user = await userRepository.findById(userToken.user_id);
 
   if (!user) {
-    throw createHttpError(404, "User not found.");
+    throw createHttpError(400, "User does not exists.");
   }
 
   const tokenCreatedAt = userToken.created_at;
@@ -26,6 +26,7 @@ async function resetPasswordService(password: string, token: string) {
 
   user.password = await hash(password, 8);
 
+  await userTokenRepository.removeToken(userToken.id);
   await userRepository.save(user);
 }
 

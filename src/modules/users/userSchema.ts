@@ -7,3 +7,16 @@ export const createUserSchema = z.object({
     password: z.string(),
   }),
 });
+
+export const forgotPasswordSchema = z.object({
+  body: z.object({
+    email: z.string().email(),
+  }),
+});
+
+export const resetPasswordSchema = z.object({
+  body: z.object({
+    token: z.string().uuid(),
+    password: z.string(),
+  }),
+});

@@ -20,7 +20,16 @@ async function generateToken(user_id: string) {
   return userToken;
 }
 
+async function removeToken(id: string) {
+  await prisma.userToken.delete({
+    where: {
+      id,
+    },
+  });
+}
+
 export default {
   findByToken,
   generateToken,
+  removeToken,
 };

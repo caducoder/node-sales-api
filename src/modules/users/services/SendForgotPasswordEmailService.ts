@@ -9,9 +9,13 @@ async function sendForgotPasswordEmail(email: string) {
     throw createHttpError(404, "User not found");
   }
 
-  const token = await userTokenRepository.generateToken(user.id);
+  try {
+    const token = await userTokenRepository.generateToken(user.id);
 
-  console.log("Token: " + token);
+    console.log("Token: " + JSON.stringify(token));
+  } catch (error) {
+    console.log("Error: " + error);
+  }
 }
 
 export default {
