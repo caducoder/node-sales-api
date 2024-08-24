@@ -45,6 +45,15 @@ async function findAll() {
   return users;
 }
 
+async function save(user: Partial<User>) {
+  await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: user,
+  });
+}
+
 async function remove(id: string) {
   await prisma.user.delete({
     where: {
@@ -59,5 +68,6 @@ export default {
   findById,
   findByEmail,
   findAll,
+  save,
   remove,
 };
