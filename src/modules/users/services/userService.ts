@@ -27,6 +27,55 @@ async function ListUserService() {
   return usersList;
 }
 
+async function ShowProfileService(id: string) {
+  const user = await userRepository.findById(id);
+
+  if (!user) {
+    throw createHttpError(404, "User not found.");
+  }
+
+  return user;
+}
+
+async function UpdateUserService({
+  user_id,
+  email,
+  name,
+  password,
+  old_password,
+}: IUpdateUserRequest) {
+  const user = await userRepository.findById(user_id);
+
+  if (!user) {
+    throw createHttpError(404, "User not found.");
+  }
+
+  if (email) {
+    const userUpdateEmail = await userRepository.findByEmail(email);
+    if (userUpdateEmail && userUpdateEmail.id !== user_id) {
+      throw createHttpError(404, "Email already used.");
+    }
+    user.email = email;
+  }
+
+  if (password && !old_password) {
+    throw createHttpError(404, "Old password not informed.");
+  }
+
+  if (password && old_password) {
+    const checkOldPassword = await bcrypt.compare(old_password, user.password);
+    if (!checkOldPassword) {
+      throw createHttpError(404, "Old password does not match.");
+    }
+
+    user.password = await bcrypt.hash(password, 8);
+  }
+
+  if (name) user.name = name;
+
+  await userRepository.save(user);
+}
+
 async function RemoveUserService(id: string) {
   await userRepository.remove(id);
 }
@@ -34,5 +83,7 @@ async function RemoveUserService(id: string) {
 export default {
   CreateUserService,
   ListUserService,
+  ShowProfileService,
+  UpdateUserService,
   RemoveUserService,
 };

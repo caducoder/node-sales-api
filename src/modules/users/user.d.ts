@@ -13,3 +13,11 @@ interface ICreateUserRequest {
   email: string;
   password: string;
 }
+
+interface IUpdateUserRequest {
+  user_id: string;
+  name: string;
+  email: string;
+  password?: string;
+  old_password?: string;
+}

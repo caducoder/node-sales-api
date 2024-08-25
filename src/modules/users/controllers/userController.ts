@@ -11,7 +11,7 @@ async function ListUsers(req: Request, res: Response, next: NextFunction) {
   }
 }
 
-async function Createuser(req: Request, res: Response, next: NextFunction) {
+async function CreateUser(req: Request, res: Response, next: NextFunction) {
   try {
     const createdUser = await userService.CreateUserService(req.body);
 
@@ -34,6 +34,6 @@ async function RemoveUser(req: Request, res: Response, next: NextFunction) {
 
 export default {
   ListUsers,
-  Createuser,
+  CreateUser,
   RemoveUser,
 };

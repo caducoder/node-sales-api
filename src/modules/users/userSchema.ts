@@ -20,3 +20,25 @@ export const resetPasswordSchema = z.object({
     password: z.string(),
   }),
 });
+
+export const updateUserSchema = z.object({
+  body: z
+    .object({
+      name: z.string(),
+      email: z.string().email(),
+      old_password: z.string().optional(),
+      password: z.string().optional(),
+    })
+    .refine(
+      (data) => {
+        if (data.password && !data.old_password) {
+          return false;
+        }
+        return true;
+      },
+      {
+        message: "old_password is required when password is present",
+        path: ["old_password"],
+      }
+    ),
+});
