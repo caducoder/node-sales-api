@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PWD}@db:5432/${POSTGRES_DB}
+        JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "3000:3000"
+    environment:
+      NODE_ENV: production
+    networks:
+      - infra
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PWD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    networks:
+      - infra
+
+networks:
+  infra:
+    driver: bridge

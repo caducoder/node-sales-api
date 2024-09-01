@@ -1,11 +1,13 @@
-import express from "express";
-import cors from "cors";
 import routes from "./routes/index.js";
-import "express-async-errors";
+import cors from "cors";
+import express from "express";
 import errorHandler from "src/middleware/errorHandlerMiddleware.js";
+
+import "express-async-errors";
+
 const app = express();
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 // identificar o formato da entrada, substituiu o bodyParser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

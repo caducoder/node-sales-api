@@ -21,7 +21,7 @@ async function sendForgotPasswordEmail(email: string) {
         template: "reset_password",
         variables: {
           name: user.name,
-          link: `http://localhost:3000/reset_password?token=${token}`,
+          link: `http://localhost:5173/reset-password?token=${token}`,
         },
       },
     });
