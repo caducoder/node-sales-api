@@ -20,12 +20,20 @@ async function CreateSessionsService({ email, password }: IRequest) {
     throw createHttpError(401, "Incorrect email or password");
   }
 
-  const token = jwt.sign({}, process.env.JWT_SECRET as string, {
-    subject: userDb.id,
-    expiresIn: "1d",
-  });
+  const token = jwt.sign(
+    {
+      role: userDb.role.name,
+    },
+    process.env.JWT_SECRET as string,
+    {
+      subject: userDb.id,
+      expiresIn: "1d",
+    }
+  );
 
-  return { user: userDb, token };
+  const { password: passw, roleId, ...userDTO } = userDb;
+
+  return { user: { ...userDTO, role: userDb.role.name }, token };
 }
 
 export default {

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
+import defineAbilitiesFor from "@shared/RBAC/permissions.js";
 
 export default function isAuthenticated(
   req: Request,
@@ -17,12 +18,12 @@ export default function isAuthenticated(
 
   try {
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET as string);
+    console.log("Decoded token: " + JSON.stringify(decodedToken));
 
-    const { sub } = decodedToken as { sub: string };
-
-    req.user = {
-      id: sub,
-    };
+    const { sub, role } = decodedToken as { sub: string; role: string };
+    const user = { id: sub, role };
+    req.user = user;
+    req.ability = defineAbilitiesFor(user);
     return next();
   } catch (error) {
     throw createHttpError(401, "Invalid token");

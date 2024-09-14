@@ -34,7 +34,9 @@ async function ShowProfileService(id: string) {
     throw createHttpError(404, "User not found.");
   }
 
-  return user;
+  const { password, roleId, ...userDTO } = user;
+
+  return { ...userDTO, role: user.role.name };
 }
 
 async function UpdateUserService({

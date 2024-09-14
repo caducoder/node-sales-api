@@ -6,7 +6,9 @@ import { validateData } from "src/middleware/validationMiddleware.js";
 
 const userRouter = Router();
 
-userRouter.get("/", isAuthenticated, userController.ListUsers);
+userRouter.use(isAuthenticated);
+
+userRouter.get("/", userController.ListUsers);
 userRouter.post("/", validateData(createUserSchema), userController.CreateUser);
 userRouter.delete("/:id", userController.RemoveUser);
 

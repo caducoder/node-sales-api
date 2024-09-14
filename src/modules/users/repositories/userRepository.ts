@@ -1,9 +1,20 @@
 import { prisma } from "@config/db.js";
 
-async function create(data: ICreateUserRequest) {
+async function create(dataNew: ICreateUserRequest) {
+  const { roleId, ...rest } = dataNew;
   const user = await prisma.user.create({
     data: {
-      ...data,
+      ...rest,
+      role: {
+        connectOrCreate: {
+          where: {
+            id: roleId,
+          },
+          create: {
+            name: "guest",
+          },
+        },
+      },
     },
   });
 
@@ -24,6 +35,11 @@ async function findById(id: string) {
     where: {
       id,
     },
+    include: {
+      role: {
+        select: { name: true },
+      },
+    },
   });
 
   return user;
@@ -33,6 +49,9 @@ async function findByEmail(email: string) {
   const user = await prisma.user.findFirst({
     where: {
       email,
+    },
+    include: {
+      role: true,
     },
   });
 
