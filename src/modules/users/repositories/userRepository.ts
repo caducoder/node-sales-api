@@ -1,14 +1,14 @@
 import { prisma } from "@config/db.js";
 
 async function create(dataNew: ICreateUserRequest) {
-  const { roleId, ...rest } = dataNew;
+  const { role, ...rest } = dataNew;
   const user = await prisma.user.create({
     data: {
       ...rest,
       role: {
         connectOrCreate: {
           where: {
-            id: roleId,
+            name: role,
           },
           create: {
             name: "guest",
@@ -59,7 +59,11 @@ async function findByEmail(email: string) {
 }
 
 async function findAll() {
-  const users = await prisma.user.findMany();
+  const users = await prisma.user.findMany({
+    include: {
+      role: true,
+    },
+  });
 
   return users;
 }

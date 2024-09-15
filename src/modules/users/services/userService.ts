@@ -1,4 +1,5 @@
 import userRepository from "../repositories/userRepository.js";
+import userRoleRepository from "../repositories/userRoleRepository.js";
 import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 
@@ -9,6 +10,14 @@ async function CreateUserService(data: ICreateUserRequest) {
 
   if (emailExists) {
     throw createHttpError(404, "Email already exists");
+  }
+
+  if (data.role) {
+    const roleExists = await userRoleRepository.findRoleByName(data.role);
+
+    if (!roleExists) {
+      throw createHttpError(404, "Role not found");
+    }
   }
 
   const hashedPassword = await bcrypt.hash(data.password, 8);
@@ -24,7 +33,15 @@ async function CreateUserService(data: ICreateUserRequest) {
 async function ListUserService() {
   const usersList = await userRepository.findAll();
 
-  return usersList;
+  const usersListDTO = usersList.map((user) => {
+    const { password, roleId, ...userDTO } = user;
+    return {
+      ...userDTO,
+      role: user.role.name,
+    };
+  });
+
+  return usersListDTO;
 }
 
 async function ShowProfileService(id: string) {

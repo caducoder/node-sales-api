@@ -8,11 +8,15 @@ type User = {
   updated_at?: Date;
 };
 
+interface Role {
+  id: string;
+  name: string;
+}
+
 interface ICreateUserRequest {
   name: string;
   email: string;
   password: string;
-  roleId?: string;
   role?: string;
 }
 

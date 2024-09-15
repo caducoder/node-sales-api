@@ -1,7 +1,8 @@
 const roles = {
   admin: "admin",
   moderator: "moderator",
-  user: "user",
+  authenticated: "authenticated",
+  visitor: "visitor",
 };
 
 export default roles;

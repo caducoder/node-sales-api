@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express";
 import productService from "../services/productService.js";
+import { NextFunction, Request, Response } from "express";
 
 async function ListProducts(req: Request, res: Response, next: NextFunction) {
   try {

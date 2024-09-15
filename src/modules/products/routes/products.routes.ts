@@ -1,8 +1,12 @@
-import { Router } from "express";
 import productController from "../controllers/productController.js";
-import { validateData } from "src/middleware/validationMiddleware.js";
 import { createProductSchema, getProductSchema } from "../productSchemas.js";
+import { Router } from "express";
+import isAuthenticated from "src/middleware/isAuthenticated.js";
+import { validateData } from "src/middleware/validationMiddleware.js";
+
 const productsRoutes = Router();
+
+// productsRoutes.use(isAuthenticated)
 
 productsRoutes.get("/", productController.ListProducts);
 productsRoutes.get(
