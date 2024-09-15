@@ -14,7 +14,11 @@ async function findById(id: string) {
   return order;
 }
 
-async function create({ customer_id, products }: ICreateOrderRequest) {
+async function create({
+  customer_id,
+  products,
+  totalValue,
+}: ICreateOrderRequest) {
   const order = await prisma.order.create({
     data: {
       customer_id,
@@ -29,6 +33,7 @@ async function create({ customer_id, products }: ICreateOrderRequest) {
           price: product.price,
         })),
       },
+      totalValue,
     },
     select: {
       id: true,
@@ -44,7 +49,11 @@ async function findAll() {
   const orders = await prisma.order.findMany({
     include: {
       customer: true,
-      products: true,
+      products: {
+        include: {
+          product: true,
+        },
+      },
     },
   });
 

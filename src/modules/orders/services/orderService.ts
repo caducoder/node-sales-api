@@ -22,7 +22,12 @@ async function CreateOrderService(data: ICreateOrderRequest) {
     throw createHttpError(400, "One or more products not found");
   }
 
-  const order = await ordersRepository.create(data);
+  const total = data.products.reduce(
+    (acc, product) => acc + product.price * product.quantity,
+    0
+  );
+
+  const order = await ordersRepository.create({ ...data, totalValue: total });
 
   const { products } = order;
 
