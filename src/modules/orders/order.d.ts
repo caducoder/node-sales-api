@@ -7,4 +7,5 @@ interface IProduct {
 interface ICreateOrderRequest {
   customer_id: number;
   products: IProduct[];
+  totalValue: number;
 }

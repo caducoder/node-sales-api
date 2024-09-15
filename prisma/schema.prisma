@@ -61,6 +61,7 @@ model Order {
   created_at  DateTime           @default(now())
   updated_at  DateTime           @default(now())
   status      String             @default("PENDING")
+  totalValue  Float              @default(0)
   products    ProductsOnOrders[]
 
   @@map("orders")
@@ -70,7 +71,7 @@ model ProductsOnOrders {
   product    Product @relation(fields: [product_id], references: [id])
   product_id String
 
-  order    Order  @relation(fields: [order_id], references: [id])
+  order    Order  @relation(fields: [order_id], references: [id], onDelete: Cascade)
   order_id String
   quantity Int
   price    Int
