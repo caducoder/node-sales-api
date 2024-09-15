@@ -40,7 +40,19 @@ async function create({ customer_id, products }: ICreateOrderRequest) {
   return order;
 }
 
+async function findAll() {
+  const orders = await prisma.order.findMany({
+    include: {
+      customer: true,
+      products: true,
+    },
+  });
+
+  return orders;
+}
+
 export default {
   findById,
   create,
+  findAll,
 };

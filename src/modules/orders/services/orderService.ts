@@ -53,7 +53,14 @@ async function ShowOrderService(id: string) {
   return order;
 }
 
+async function ListOrderService() {
+  const orderList = await ordersRepository.findAll();
+
+  return orderList;
+}
+
 export default {
   CreateOrderService,
   ShowOrderService,
+  ListOrderService,
 };

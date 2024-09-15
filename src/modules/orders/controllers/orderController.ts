@@ -1,15 +1,15 @@
 import orderService from "../services/orderService.js";
 import { NextFunction, Request, Response } from "express";
 
-// async function ListOrders(req: Request, res: Response, next: NextFunction) {
-//   try {
-//     const orderList = await orderService.ListOrderService();
+async function ListOrders(req: Request, res: Response, next: NextFunction) {
+  try {
+    const orderList = await orderService.ListOrderService();
 
-//     return res.json(orderList);
-//   } catch (ex: unknown) {
-//     next(ex);
-//   }
-// }
+    return res.json(orderList);
+  } catch (ex: unknown) {
+    next(ex);
+  }
+}
 
 async function ShowOrder(req: Request, res: Response, next: NextFunction) {
   try {
@@ -51,4 +51,5 @@ async function CreateOrder(req: Request, res: Response, next: NextFunction) {
 export default {
   CreateOrder,
   ShowOrder,
+  ListOrders,
 };

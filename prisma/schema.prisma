@@ -60,6 +60,7 @@ model Order {
   customer_id Int?
   created_at  DateTime           @default(now())
   updated_at  DateTime           @default(now())
+  status      String             @default("PENDING")
   products    ProductsOnOrders[]
 
   @@map("orders")
