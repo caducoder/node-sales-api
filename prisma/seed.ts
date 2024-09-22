@@ -13,9 +13,6 @@ async function seed() {
       {
         name: "moderator",
       },
-      {
-        name: "authenticated",
-      },
     ],
   });
 

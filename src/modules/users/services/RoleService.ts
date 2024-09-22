@@ -1,3 +1,4 @@
+import userRepository from "../repositories/userRepository.js";
 import userRoleRepository from "../repositories/userRoleRepository.js";
 import createHttpError from "http-errors";
 
@@ -17,7 +18,29 @@ async function ListRoles() {
   return roles;
 }
 
+async function ChangeUserRole(userId: string, roleId: string) {
+  const role = await userRoleRepository.findRoleByName(roleId);
+  const user = await userRepository.findById(userId);
+
+  if (!user) {
+    throw createHttpError(404, "User not found");
+  }
+
+  if (!role) {
+    throw createHttpError(404, "Role not found");
+  }
+
+  if (user.roleId === role.id) {
+    return;
+  }
+
+  await userRepository.updateRole(userId, roleId);
+
+  return;
+}
+
 export default {
   CreateNewRole,
   ListRoles,
+  ChangeUserRole,
 };

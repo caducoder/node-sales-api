@@ -27,7 +27,24 @@ async function RegisterNewRole(
   }
 }
 
+async function AssignRoleToUser(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { user_id, role_id } = req.body;
+
+  try {
+    await RoleService.ChangeUserRole(user_id, role_id);
+
+    return res.sendStatus(204);
+  } catch (ex: unknown) {
+    next(ex);
+  }
+}
+
 export default {
   ListAllRoles,
   RegisterNewRole,
+  AssignRoleToUser,
 };

@@ -85,6 +85,17 @@ async function remove(id: string) {
   });
 }
 
+async function updateRole(id: string, roleId: string) {
+  await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      roleId,
+    },
+  });
+}
+
 export default {
   create,
   findByName,
@@ -93,4 +104,5 @@ export default {
   findAll,
   save,
   remove,
+  updateRole,
 };

@@ -21,7 +21,7 @@ export default function isAuthenticated(
 
     const { sub, role } = decodedToken as { sub: string; role: string };
     const user = { id: sub, role };
-    console.log("[USER]", user);
+
     req.user = user;
     // req.ability = defineAbilitiesFor(user);
     return next();
