@@ -8,7 +8,7 @@ async function create(dataNew: ICreateUserRequest) {
       role: {
         connectOrCreate: {
           where: {
-            name: role,
+            name: role || "guest",
           },
           create: {
             name: "guest",

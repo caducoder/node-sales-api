@@ -11,7 +11,7 @@ const userRouter = Router();
 userRouter.use(isAuthenticated);
 
 userRouter.get("/", userController.ListUsers);
-userRouter.post("/", validateData(createUserSchema), userController.CreateUser);
+
 userRouter.delete("/:id", userController.RemoveUser);
 
 userRouter.get("/roles", RoleController.ListAllRoles);

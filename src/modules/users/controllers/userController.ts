@@ -17,6 +17,7 @@ async function CreateUser(req: Request, res: Response, next: NextFunction) {
 
     return res.json(createdUser);
   } catch (ex: unknown) {
+    console.log(ex);
     next(ex);
   }
 }

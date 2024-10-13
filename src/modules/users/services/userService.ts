@@ -12,7 +12,7 @@ async function CreateUserService(data: ICreateUserRequest) {
     throw createHttpError(404, "Email already exists");
   }
 
-  if (data.role) {
+  if (data?.role) {
     const roleExists = await userRoleRepository.findRoleByName(data.role);
 
     if (!roleExists) {
