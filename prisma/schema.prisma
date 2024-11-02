@@ -20,27 +20,46 @@ model Product {
 }
 
 model User {
-  id         String      @id @default(uuid())
-  name       String
-  email      String      @unique
-  password   String
-  avatar     String?
-  role       Role        @relation(fields: [roleId], references: [id])
-  roleId     String
-  created_at DateTime    @default(now())
-  updated_at DateTime    @default(now())
-  token      UserToken[]
+  id       String      @id @default(uuid())
+  name     String
+  email    String      @unique
+  password String
+  avatar   String?
+  role     Role        @relation(fields: [roleId], references: [id])
+  roleId   Int
+  module   Module?     @relation(fields: [moduleId], references: [id])
+  moduleId Int?
+  token    UserToken[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   @@map("users")
 }
 
 model Role {
-  id   String @id @default(uuid())
-  name String @unique @db.VarChar(127)
+  id          Int          @id @default(autoincrement())
+  name        String       @unique // admin, coordinator, collaborator
+  users       User[]
+  permissions Permission[]
+}
 
-  users User[]
+model Module {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique // finances, hr, sales, inventory
+  users       User[]
+  permissions Permission[]
+}
 
-  @@map("roles")
+model Permission {
+  id       Int     @id @default(autoincrement())
+  action   String // create, read, update, delete
+  role     Role    @relation(fields: [roleId], references: [id])
+  roleId   Int
+  moduleId Int? // null significa todos os módulos (caso do admin)
+  module   Module? @relation(fields: [moduleId], references: [id])
+
+  @@unique([roleId, moduleId, action])
 }
 
 model UserToken {

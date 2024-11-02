@@ -8,10 +8,10 @@ async function create(dataNew: ICreateUserRequest) {
       role: {
         connectOrCreate: {
           where: {
-            name: role || "guest",
+            name: role || "collaborator",
           },
           create: {
-            name: "guest",
+            name: "collaborator",
           },
         },
       },
@@ -52,6 +52,7 @@ async function findByEmail(email: string) {
     },
     include: {
       role: true,
+      module: true,
     },
   });
 
@@ -91,7 +92,7 @@ async function updateRole(id: string, roleId: string) {
       id,
     },
     data: {
-      roleId,
+      roleId: parseInt(roleId),
     },
   });
 }

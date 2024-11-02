@@ -22,6 +22,7 @@ async function CreateSessionsService({ email, password }: IRequest) {
 
   const token = jwt.sign(
     {
+      userId: userDb.id,
       role: userDb.role.name,
     },
     process.env.JWT_SECRET as string,
@@ -31,9 +32,9 @@ async function CreateSessionsService({ email, password }: IRequest) {
     }
   );
 
-  const { password: passw, roleId, ...userDTO } = userDb;
+  const { role, id, moduleId, created_at, name, ...rest } = userDb;
 
-  return { user: { ...userDTO, role: userDb.role.name }, token };
+  return { user: { id, name, moduleId, role: role.name, created_at }, token };
 }
 
 export default {

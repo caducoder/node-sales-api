@@ -1,4 +1,3 @@
-import defineAbilitiesFor from "@shared/RBAC/permissions.js";
 import { NextFunction, Request, Response } from "express";
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
@@ -23,7 +22,7 @@ export default function isAuthenticated(
     const user = { id: sub, role };
 
     req.user = user;
-    // req.ability = defineAbilitiesFor(user);
+
     return next();
   } catch (error) {
     throw createHttpError(401, "Invalid token");
