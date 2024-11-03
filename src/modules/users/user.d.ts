@@ -18,6 +18,7 @@ interface ICreateUserRequest {
   email: string;
   password: string;
   role?: string;
+  moduleId?: number;
 }
 
 interface IUpdateUserRequest {

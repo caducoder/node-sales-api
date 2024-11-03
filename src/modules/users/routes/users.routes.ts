@@ -10,12 +10,20 @@ const userRouter = Router();
 
 userRouter.use(isAuthenticated);
 
-userRouter.get("/", userController.ListUsers);
+userRouter.get("/", checkPermission("read"), userController.ListUsers);
 
 userRouter.delete("/:id", checkPermission("delete"), userController.RemoveUser);
 
-userRouter.get("/roles", RoleController.ListAllRoles);
-userRouter.post("/roles", RoleController.RegisterNewRole);
-userRouter.post("/roles/assign", RoleController.AssignRoleToUser);
+userRouter.get("/roles", checkPermission("read"), RoleController.ListAllRoles);
+userRouter.post(
+  "/roles",
+  checkPermission("create"),
+  RoleController.RegisterNewRole
+);
+userRouter.post(
+  "/roles/assign",
+  checkPermission("update"),
+  RoleController.AssignRoleToUser
+);
 
 export default userRouter;

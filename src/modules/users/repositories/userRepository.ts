@@ -1,7 +1,7 @@
 import { prisma } from "@config/db.js";
 
 async function create(dataNew: ICreateUserRequest) {
-  const { role, ...rest } = dataNew;
+  const { role, moduleId, ...rest } = dataNew;
   const user = await prisma.user.create({
     data: {
       ...rest,
@@ -15,6 +15,15 @@ async function create(dataNew: ICreateUserRequest) {
           },
         },
       },
+      ...(role !== "admin" && moduleId
+        ? {
+            module: {
+              connect: {
+                id: moduleId,
+              },
+            },
+          }
+        : {}),
     },
   });
 

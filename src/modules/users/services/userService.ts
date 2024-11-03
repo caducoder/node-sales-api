@@ -18,6 +18,13 @@ async function CreateUserService(data: ICreateUserRequest) {
     if (!roleExists) {
       throw createHttpError(404, "Role not found");
     }
+
+    if (roleExists.name !== "admin" && !data.moduleId) {
+      throw createHttpError(
+        400,
+        "Módulo é obrigatório para coordenadores e colaboradores"
+      );
+    }
   }
 
   const hashedPassword = await bcrypt.hash(data.password, 8);
