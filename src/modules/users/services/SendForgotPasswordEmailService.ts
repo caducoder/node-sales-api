@@ -11,7 +11,7 @@ async function sendForgotPasswordEmail(email: string) {
   }
 
   try {
-    const { token } = await userTokenRepository.generateToken(user.id);
+    const { token } = await userTokenRepository.createToken(user.id);
 
     // console.log("Token: " + JSON.stringify(token));
     await EtherealMail.sendMail({

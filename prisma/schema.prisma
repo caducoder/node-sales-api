@@ -20,16 +20,17 @@ model Product {
 }
 
 model User {
-  id       String      @id @default(uuid())
-  name     String
-  email    String      @unique
-  password String
-  avatar   String?
-  role     Role        @relation(fields: [roleId], references: [id])
-  roleId   Int
-  module   Module?     @relation(fields: [moduleId], references: [id])
-  moduleId Int?
-  token    UserToken[]
+  id           String      @id @default(uuid())
+  name         String
+  email        String      @unique
+  password     String
+  avatar       String?
+  role         Role        @relation(fields: [roleId], references: [id])
+  roleId       Int
+  module       Module?     @relation(fields: [moduleId], references: [id])
+  moduleId     Int?
+  refreshToken String?     @db.Text
+  tokens       UserToken[]
 
   created_at DateTime @default(now())
   updated_at DateTime @default(now())

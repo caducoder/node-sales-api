@@ -7,10 +7,13 @@ import { createUserSchema } from "../userSchema.js";
 const sessionsRouter = Router();
 
 sessionsRouter.post("/", sessionsController.Login);
+sessionsRouter.get("/me", sessionsController.Me);
 sessionsRouter.post(
   "/register",
   validateData(createUserSchema),
   userController.CreateUser
 );
+
+sessionsRouter.get("/refresh", sessionsController.RefreshToken);
 
 export default sessionsRouter;

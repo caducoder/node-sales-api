@@ -10,7 +10,7 @@ async function findByToken(token: string) {
   return userToken;
 }
 
-async function generateToken(user_id: string) {
+async function createToken(user_id: string) {
   const userToken = await prisma.userToken.create({
     data: {
       user_id,
@@ -30,6 +30,6 @@ async function removeToken(id: string) {
 
 export default {
   findByToken,
-  generateToken,
+  createToken,
   removeToken,
 };

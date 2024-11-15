@@ -7,7 +7,7 @@ export const checkPermission = (action: string) => {
     console.log("[ACTION]", action);
     try {
       if (!req.user) {
-        return res.status(401).send({ error: "Não autorizado" });
+        return res.status(403).send({ error: "Não autorizado" });
       }
 
       const { id } = req.user;
@@ -26,7 +26,7 @@ export const checkPermission = (action: string) => {
       });
 
       if (!user) {
-        return res.status(401).send({ error: "Usuário não encontrado" });
+        return res.status(404).send({ error: "Usuário não encontrado" });
       }
 
       // Se for admin, permite tudo
