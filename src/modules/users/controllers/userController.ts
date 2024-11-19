@@ -33,8 +33,23 @@ async function RemoveUser(req: Request, res: Response, next: NextFunction) {
   }
 }
 
+async function ListAppDepartments(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const result = await userService.ListAppDepartmentsService();
+
+    return res.json(result);
+  } catch (ex: unknown) {
+    next(ex);
+  }
+}
+
 export default {
   ListUsers,
   CreateUser,
   RemoveUser,
+  ListAppDepartments,
 };

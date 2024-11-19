@@ -39,8 +39,17 @@ async function ChangeUserRole(userId: string, roleId: string) {
   return;
 }
 
+async function getRolePermissions(roleId: number) {
+  const role = await userRoleRepository.getRolePermission(roleId);
+  if (!role) {
+    throw createHttpError(404, "Role not found");
+  }
+  return role;
+}
+
 export default {
   CreateNewRole,
   ListRoles,
   ChangeUserRole,
+  getRolePermissions,
 };

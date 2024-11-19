@@ -13,16 +13,8 @@ async function seed() {
     );
   }
 
-  const admin = await prisma.role.create({
-    data: { name: "admin" },
-  });
-
-  const coordinator = await prisma.role.create({
-    data: { name: "coordinator" },
-  });
-
-  const collaborator = await prisma.role.create({
-    data: { name: "collaborator" },
+  const adminRole = await prisma.role.create({
+    data: { name: "admin", isSuperAdmin: true },
   });
 
   // Criar módulos
@@ -33,36 +25,73 @@ async function seed() {
     prisma.module.create({ data: { name: "inventory" } }),
   ]);
 
-  // Criar permissões para admin (acesso total)
-  await prisma.permission.createMany({
-    data: ["create", "read", "update", "delete"].map((action) => ({
-      action,
-      roleId: admin.id,
-      moduleId: null, // null significa todos os módulos
-    })),
+  const createModulePermissions = async (
+    moduleId: number,
+    moduleName: string
+  ) => {
+    const actionVerbs = ["create", "read", "update", "delete"];
+    const permissions = [];
+
+    for (const action of actionVerbs) {
+      const permission = await prisma.permission.create({
+        data: {
+          action: `${action}`,
+          description: `Permite ${action} no módulo ${moduleName}`,
+          moduleId,
+        },
+      });
+      permissions.push(permission);
+    }
+
+    return permissions;
+  };
+
+  // Criar permissões gerais (sem módulo específico)
+  const generalPermissions = await Promise.all([
+    prisma.permission.create({
+      data: {
+        action: "access_dashboard",
+        description: "Permite acesso ao dashboard",
+      },
+    }),
+    prisma.permission.create({
+      data: {
+        action: "generate_reports",
+        description: "Permite gerar relatórios",
+      },
+    }),
+    prisma.permission.create({
+      data: {
+        action: "send_notifications",
+        description: "Permite criar notificações",
+      },
+    }),
+  ]);
+
+  // Criar permissões para cada módulo
+  const modulePermissions = await Promise.all(
+    modules.map((module) => createModulePermissions(module.id, module.name))
+  );
+
+  // Flatten array de permissões
+  const allPermissions = [...generalPermissions, ...modulePermissions.flat()];
+
+  // Configurar permissões por role
+  const rolePermissionsData = [];
+
+  // Admin tem todas as permissões ativas
+  for (const permission of allPermissions) {
+    rolePermissionsData.push({
+      roleId: adminRole.id, // admin
+      permissionId: permission.id,
+      isActive: true,
+    });
+  }
+
+  // Criar todas as relações de role-permission
+  await prisma.rolePermission.createMany({
+    data: rolePermissionsData,
   });
-
-  // Criar permissões para coordinator (acesso total ao seu módulo)
-  for (const module of modules) {
-    await prisma.permission.createMany({
-      data: ["create", "read", "update", "delete"].map((action) => ({
-        action,
-        roleId: coordinator.id,
-        moduleId: module.id,
-      })),
-    });
-  }
-
-  // Criar permissões para collaborator (acesso limitado ao seu módulo)
-  for (const module of modules) {
-    await prisma.permission.createMany({
-      data: ["read", "create"].map((action) => ({
-        action,
-        roleId: collaborator.id,
-        moduleId: module.id,
-      })),
-    });
-  }
 
   const hashedPassword = await hash(defaultAdminPassword, 10);
 
@@ -71,8 +100,7 @@ async function seed() {
       name: defaultAdminUser,
       email: defaultAdminEmail,
       password: hashedPassword,
-      roleId: admin.id,
-      // Note que não definimos moduleId para o admin
+      roleId: adminRole.id, // admin
     },
   });
 }

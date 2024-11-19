@@ -43,8 +43,25 @@ async function AssignRoleToUser(
   }
 }
 
+async function ListRolePermissions(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  const { roleId } = req.params;
+
+  try {
+    const result = await RoleService.getRolePermissions(Number(roleId));
+
+    return res.json(result);
+  } catch (ex: unknown) {
+    next(ex);
+  }
+}
+
 export default {
   ListAllRoles,
   RegisterNewRole,
   AssignRoleToUser,
+  ListRolePermissions,
 };

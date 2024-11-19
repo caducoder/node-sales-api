@@ -26,4 +26,11 @@ userRouter.post(
   RoleController.AssignRoleToUser
 );
 
+userRouter.get(
+  "/roles/:roleId/permissions",
+  RoleController.ListRolePermissions
+);
+
+userRouter.get("/app-departments", userController.ListAppDepartments);
+
 export default userRouter;

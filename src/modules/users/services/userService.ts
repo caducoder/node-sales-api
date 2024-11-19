@@ -106,10 +106,17 @@ async function RemoveUserService(id: string) {
   await userRepository.remove(id);
 }
 
+async function ListAppDepartmentsService() {
+  const departments = await userRepository.findAllAppDepartments();
+
+  return departments;
+}
+
 export default {
   CreateUserService,
   ListUserService,
   ShowProfileService,
   UpdateUserService,
   RemoveUserService,
+  ListAppDepartmentsService,
 };

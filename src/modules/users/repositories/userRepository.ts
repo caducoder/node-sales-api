@@ -72,6 +72,7 @@ async function findAll() {
   const users = await prisma.user.findMany({
     include: {
       role: true,
+      module: true,
     },
   });
 
@@ -106,6 +107,12 @@ async function updateRole(id: string, roleId: string) {
   });
 }
 
+async function findAllAppDepartments() {
+  const deparmentModules = await prisma.module.findMany({});
+
+  return deparmentModules;
+}
+
 export default {
   create,
   findByName,
@@ -115,4 +122,5 @@ export default {
   save,
   remove,
   updateRole,
+  findAllAppDepartments,
 };

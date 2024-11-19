@@ -31,6 +31,6 @@ export default function isAuthenticated(
 
     return next();
   } catch (error) {
-    throw createHttpError(401, "[isAuthenticated] Invalid token");
+    throw createHttpError(401, "Invalid token");
   }
 }

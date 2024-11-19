@@ -20,29 +20,44 @@ model Product {
 }
 
 model User {
-  id           String      @id @default(uuid())
+  id           String  @id @default(uuid())
   name         String
-  email        String      @unique
+  email        String  @unique
   password     String
   avatar       String?
-  role         Role        @relation(fields: [roleId], references: [id])
+  role         Role    @relation(fields: [roleId], references: [id])
   roleId       Int
-  module       Module?     @relation(fields: [moduleId], references: [id])
+  module       Module? @relation(fields: [moduleId], references: [id])
   moduleId     Int?
-  refreshToken String?     @db.Text
-  tokens       UserToken[]
+  refreshToken String? @db.Text
 
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now())
+  created_at DateTime    @default(now())
+  updated_at DateTime    @default(now())
+  UserToken  UserToken[]
 
   @@map("users")
 }
 
 model Role {
-  id          Int          @id @default(autoincrement())
-  name        String       @unique // admin, coordinator, collaborator
-  users       User[]
-  permissions Permission[]
+  id           Int              @id @default(autoincrement())
+  name         String           @unique // admin, coordinator, collaborator
+  isSuperAdmin Boolean          @default(false)
+  users        User[]
+  permissions  RolePermission[]
+}
+
+model RolePermission {
+  id           Int        @id @default(autoincrement())
+  role         Role       @relation(fields: [roleId], references: [id])
+  roleId       Int
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId Int
+  isActive     Boolean    @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+
+  @@unique([roleId, permissionId])
 }
 
 model Module {
@@ -53,14 +68,15 @@ model Module {
 }
 
 model Permission {
-  id       Int     @id @default(autoincrement())
-  action   String // create, read, update, delete
-  role     Role    @relation(fields: [roleId], references: [id])
-  roleId   Int
-  moduleId Int? // null significa todos os módulos (caso do admin)
-  module   Module? @relation(fields: [moduleId], references: [id])
+  id          Int              @id @default(autoincrement())
+  action      String // create, read, update, delete
+  description String?
+  module      Module?          @relation(fields: [moduleId], references: [id])
+  moduleId    Int? // null significa todos os módulos (caso do admin)
+  roles       RolePermission[]
 
-  @@unique([roleId, moduleId, action])
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 }
 
 model UserToken {
