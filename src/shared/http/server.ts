@@ -2,6 +2,7 @@ import routes from "./routes/index.js";
 import cors from "cors";
 import express from "express";
 import errorHandler from "src/middleware/errorHandlerMiddleware.js";
+import { generalLogger, httpLogger } from "@shared/lib/logger.js";
 
 import "express-async-errors";
 
@@ -12,11 +13,21 @@ const PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cors());
+app.use(httpLogger);
 
-app.use(routes);
+app.get("/", (req, res) => {
+  res.json({
+    message: "Backend ativo! Recebendo requisições com sucesso 🚀",
+    status: "OK",
+    timestamp: new Date().toISOString() + " UTC",
+    uptime: process.uptime().toFixed(2) + "s",
+  });
+});
+
+app.use("/api", routes);
 
 app.use(errorHandler);
 
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}! 🎉`);
+  generalLogger.info(`Server is running on port ${PORT}!`);
 });
